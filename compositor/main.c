@@ -1272,20 +1272,19 @@ configure_input_device(struct weston_compositor *compositor,
 	struct weston_config *config = wet_get_config(compositor);
 	int enable_tap;
 	int enable_tap_default;
+  int natural_scroll;
+  int natural_scroll_default = 0;
 
-	s = weston_config_get_section(config,
-				      "libinput", NULL, NULL);
+	s = weston_config_get_section(config, "libinput", NULL, NULL);
 
 	if (libinput_device_config_tap_get_finger_count(device) > 0) {
-		enable_tap_default =
-			libinput_device_config_tap_get_default_enabled(
-				device);
-		weston_config_section_get_bool(s, "enable_tap",
-					       &enable_tap,
-					       enable_tap_default);
-		libinput_device_config_tap_set_enabled(device,
-						       enable_tap);
+		enable_tap_default = libinput_device_config_tap_get_default_enabled(device);
+		weston_config_section_get_bool(s, "enable_tap", &enable_tap, enable_tap_default);
+		libinput_device_config_tap_set_enabled(device, enable_tap);
 	}
+
+  weston_config_section_get_bool(s, "natural_scroll", &natural_scroll, natural_scroll_default);
+  libinput_device_config_scroll_set_natural_scroll_enabled(device, natural_scroll);
 }
 
 static int
